@@ -9,7 +9,7 @@ using namespace std;
 class Golomb{
 
     public:
-    
+
         std::string *encode(int number, int m){
 
             std::string* qr=new std::string[2];
@@ -19,14 +19,14 @@ class Golomb{
             std::string unicode="";
             std::string binary="";
             std::string binario_string;
-            int binario; 
+            int binario;
 
             if (number>=0){
 
                 if(m!=0){
 
                     if(ceil(log2(m)) == floor(log2(m))){
-                        
+
                         q=number/m;
 
                         r=number-(q*m);
@@ -40,25 +40,25 @@ class Golomb{
                             }
 
                         unicode.append("1");
-                            
+
 
                         }
 
-                        
 
-                        while (r > 0) { 
-                            
-                            binario = r % 2; 
+
+                        while (r > 0) {
+
+                            binario = r % 2;
                             binario_string=to_string(binario);
-                            binary.insert (0,binario_string); 
-                            r = r / 2; 
-                            i++; 
+                            binary.insert (0,binario_string);
+                            r = r / 2;
+                            i++;
 
-                        } 
+                        }
 
                         qr[0]=unicode;
                         qr[1]=binary;
-                            
+
 
 
                         return qr;
@@ -69,7 +69,7 @@ class Golomb{
 
                 else cout << "m tem de ser positivo";
             }
-                   
+
             else {
                 cout << "O número tem de ser um inteiro positivo!";
                 exit(1);
@@ -86,26 +86,27 @@ class Golomb{
             int r=0;
             int base=1;
             int resto;
-        
+
 
             int carateres=unicode.length();
             q=carateres-1;
-            
+
             int binary_int=std::stoi(binary);
+            cout << binary_int << "\n";
             int temp=binary_int;
-            
-            
-            while (temp) { 
 
-                int last_digit = temp % 10; 
 
-                temp = temp / 10; 
-        
-                r += last_digit * base; 
-        
-                base = base * 2; 
-            } 
-  
+            while (temp) {
+
+                int last_digit = temp % 10;
+
+                temp = temp / 10;
+
+                r += last_digit * base;
+
+                base = base * 2;
+            }
+
 
             numero=r+(q*m);
             *resultado= numero;
@@ -113,11 +114,11 @@ class Golomb{
 
 
         }
-            
+
 
 };
-            
-        
+
+
 
 
 
@@ -134,11 +135,11 @@ int main(){
 
     int *numero_desconvertido;
     numero_desconvertido=test_golomb->decode(result[0],result[1],m);
-    cout << "Resultado de conversão de Golomb para inteiro: " << *numero_desconvertido;
+    cout << "Resultado de conversão de Golomb para inteiro: " << *numero_desconvertido << "\n";
 
 
-    
- 
+
+
 
 
 }
