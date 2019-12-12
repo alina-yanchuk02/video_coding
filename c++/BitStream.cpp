@@ -178,7 +178,7 @@ int main(){
 
 
 
-    bits=test_stream->read_bits("n_bits_output.bin",n);
+    bits=test_stream->read_bits("one_bit_output",n);
     cout << "Primeiros " << n << " bits do output file: ";
     for ( int i = 0; i < n; i++ ) {
         cout << bits[i];
@@ -188,4 +188,7 @@ int main(){
 
 }
     
+
+
+
  
