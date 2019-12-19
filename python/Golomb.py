@@ -10,7 +10,9 @@ class Golomb:
         unicode = ""
         binary = ""
 
-        if number >= 0:
+        if number == 0:
+            return ['0','0'] 
+        elif number >= 0:
             if m != 0:
                 if math.ceil(math.log2(m)) == math.floor(math.log2(m)):
                     q = math.floor(number/m)
@@ -25,7 +27,7 @@ class Golomb:
                     while (r > 0):
                         binario = math.floor(r % 2)
                         binario_string = str(binario)
-                        binary = binario_string + binary 
+                        binary = binario_string + binary
                         r = math.floor(r/2)
                         i+=1
                     qr.append(unicode)

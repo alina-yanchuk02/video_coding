@@ -7,13 +7,11 @@
 #include <sstream>
 #include <iterator>
 #include <algorithm>
+#include <opencv2/opencv.hpp>
 
-
-
-
-
-using namespace std;
 using namespace cv;
+using namespace std;
+
 
 class VideoPlayer{
 
@@ -21,7 +19,7 @@ class VideoPlayer{
 
         int height_num,width_num;
         std::string fps;
-    
+
         void read_video_file(string file){
 
 
@@ -38,13 +36,13 @@ class VideoPlayer{
             }
 
             getline(myfile, line);
-            
-            
-           
+
+
+
             std::istringstream buf(line);
             std::istream_iterator<std::string> beg(buf), end;
 
-            std::vector<std::string> tokens(beg, end); 
+            std::vector<std::string> tokens(beg, end);
 
             std::string width;
             width=tokens[1];
@@ -56,11 +54,11 @@ class VideoPlayer{
             height.erase(std::remove(height.begin(), height.end(), 'H'), height.end());
             height_num=stoi(height);
 
-            
+
             fps=tokens[3];
             fps.erase(std::remove(fps.begin(), fps.end(), 'F'), fps.end());
-            
-            
+
+
             getline(myfile, line);
 
             int size=(width_num * 2) * height_num;
@@ -72,14 +70,14 @@ class VideoPlayer{
             cout << linha;
 
 
-            
-            
+
+
         };
 
 
-       
 
-  
+
+
 
 
 };
@@ -87,17 +85,9 @@ class VideoPlayer{
 int main(){
 
     VideoPlayer* test_player = new VideoPlayer();
-  
+
     test_player->read_video_file("video.y4m");
-    
+
 
 
 }
-    
-
-
-
- 
-
-
- 
