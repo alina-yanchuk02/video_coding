@@ -17,6 +17,9 @@ class BitStream:
     def setBitstream(self,bitstream):
         self.bitstream = bitstream
 
+    def addBit(self,bit):
+        self.bitstream.append(bit)
+
     def read_file(self):
         f=open(self.fileInput, "rb")
         for byte in f.read():
@@ -45,9 +48,8 @@ class BitStream:
             n += 1
         return r
 
-    def write_n_bits(self,pos,n_bits):
-        r = read_n_bits(pos_n_bits)
-        b = self.toBytes(r)
+    def write_n_bits(self,pos_n_bits):
+        b = self.toBytes(pos_n_bits)
         f = open(self.fileOutput,"ab")
         f.write(bytes(b))
 

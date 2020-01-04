@@ -1,6 +1,7 @@
 from Frame import *
 import numpy as np
 import cv2 as cv2
+from datetime import datetime
 
 
 class Video_Player:
@@ -46,26 +47,20 @@ class Video_Player:
                 frame = Frame_4_2_0(self.height, self.width)
                 self.type = 420
 
-
+            i = 0
             while read.readline() != b'':
+                i+=1
                 frame_image=frame.load_frame(read)
-                frame.jpeg(frame.Y)
-
 
                 cv2.imshow('image', frame_image)
                 cv2.waitKey(1)
-
-                #o que é isto???
-                if self.contador==self.width:
+                if i == 10:
                     break
-
-                self.contador=self.contador+1
-                ######
 
             cv2.destroyAllWindows()
 
 
-    def JPEG_LS(self):
+    def codificador(self):
 
         with open(self.file, "rb") as read:
 
@@ -95,14 +90,28 @@ class Video_Player:
                 frame = Frame_4_2_0(self.height, self.width)
                 self.type = 420
 
-
+            i=0
+            bitstream = BitStream()
+            bitstream.setFileOutput("jpeg.bin")
             while read.readline() != b'':
+                i+=1
+                print(i)
+                inicio = datetime.now()
                 frame_image=frame.load_frame(read)
-                frame.jpeg(frame.Y)
-                
+                bst_frame = frame.codificador()
+                fim = datetime.now()
+                bitstream.write_n_bits(bst_frame.bitstream)
+                l= fim -inicio
+                print(l)
+                if i == 10:
+                    break
+
+    def descodificador(self, file):
+        pass
 
 
 if __name__ == "__main__":
     video = Video_Player("ducks_take_off_420_720p50.y4m")
     #video.play_video()
-    video.JPEG_LS()
+    video.codificador()
+    video.descodificador("jpeg.bin")

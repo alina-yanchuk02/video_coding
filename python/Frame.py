@@ -1,5 +1,6 @@
 import numpy
-
+from Golomb import *
+from BitStream import *
 
 class Frame:
     def __init__(self, height, width):
@@ -10,26 +11,40 @@ class Frame:
         self.U = None
         self.V = None
 
-    def jpeg(self,matriz):
-        print("-----------------")
-        new_matriz = [[0]*self.width]*self.height
-        for y in range(1,len(self.Y)):
-            for x in range(1,len(self.Y[0])):
-                if y == 0 or x == 0:
-                    new_matriz[y][x] = self.Y[y][x]
-                else:
-                    a = self.Y[y][x-1]
-                    b = self.Y[y-1][x]
-                    c = self.Y[y-1][x-1]
+    def codificador(self):
+        bitstream = BitStream()
 
-                    if c >= max(a,b):
-                        new_matriz[y][x] = min(a,b)
-                    elif c <= min(a,b):
-                        new_matriz[y][x] = min(a,b)
+        for y in range(1,self.height):
+            for x in range(1,self.width):
+                for matriz in [self.Y,self.U,self.V]:
+                    p = 0
+                    if y == 0 or x == 0:
+                        #new_matriz[y][x] = matriz[y][x]
+                        p = matriz[y][x]
+                        print(p)
                     else:
-                        new_matriz[y][x] = a + b - c
+                        a = matriz[y][x-1]
+                        b = matriz[y-1][x]
+                        c = matriz[y-1][x-1]
+
+                        if c >= max(a,b):
+                            p = min(a,b)
+                        elif c <= min(a,b):
+                            p = min(a,b)
+                        else:
+                            p = a + b - c
+
+                    l = matriz[y][x] - p
+                    #new_matriz[y][x] = l
+                    golomb = Golomb()
+                    g = golomb.encode(l,4)
+                    for bit in "".join(g):
+                        bitstream.addBit(int(bit))
                 x+=1
             y+=1
+        #print(bitstream.bitstream)
+        return bitstream
+
 
 
 class Frame_4_4_4(Frame):
@@ -66,7 +81,7 @@ class Frame_4_2_2(Frame):
 
         self.Y = numpy.fromfile(read, dtype=numpy.uint8, count=self.width * self.height).reshape((self.height, self.width))
 
-        self.U = numpy.fromfile(read, dtype=numpy.uint8, count=self.width * self.height).reshape((self.height, self.width))
+        self.U = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
 
         self.V = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
 
@@ -89,6 +104,7 @@ class Frame_4_2_0(Frame):
 
     def load_frame(self, read):
         self.Y = numpy.fromfile(read, dtype=numpy.uint8, count=self.width * self.height).reshape((self.height, self.width))
+
         self.U = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
 
         self.V = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
