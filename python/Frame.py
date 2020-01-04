@@ -13,10 +13,9 @@ class Frame:
 
     def codificador(self):
         bitstream = BitStream()
-
-        for y in range(1,self.height):
-            for x in range(1,self.width):
-                for matriz in [self.Y,self.U,self.V]:
+        for matriz in [self.Y,self.U,self.V]:
+            for y in range(1,self.height):
+                for x in range(1,self.width):
                     p = 0
                     if y == 0 or x == 0:
                         #new_matriz[y][x] = matriz[y][x]
@@ -34,14 +33,21 @@ class Frame:
                         else:
                             p = a + b - c
 
-                    l = matriz[y][x] - p
+                    print("---------")
+                    print(matriz[y][x])
+                    print(p)
+                    if matriz[y][x] < p:
+                        l = 0
+                    else:
+                        l = matriz[y][x] - p
+                    print(l)
                     #new_matriz[y][x] = l
                     golomb = Golomb()
                     g = golomb.encode(l,4)
                     for bit in "".join(g):
                         bitstream.addBit(int(bit))
-                x+=1
-            y+=1
+                    x+=1
+                y+=1
         #print(bitstream.bitstream)
         return bitstream
 

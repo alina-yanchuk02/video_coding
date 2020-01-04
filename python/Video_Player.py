@@ -103,15 +103,19 @@ class Video_Player:
                 bitstream.write_n_bits(bst_frame.bitstream)
                 l= fim -inicio
                 print(l)
-                if i == 10:
+                if i == 1:
                     break
 
     def descodificador(self, file):
-        pass
-
+        bitstream = BitStream()
+        bitstream.setFileInput(file)
+        bitstream.read_file()
+        print(len(bitstream.bitstream))
 
 if __name__ == "__main__":
     video = Video_Player("ducks_take_off_420_720p50.y4m")
     #video.play_video()
     video.codificador()
+    print(video.height)
+    print(video.width)
     video.descodificador("jpeg.bin")

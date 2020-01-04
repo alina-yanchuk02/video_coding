@@ -1,7 +1,7 @@
 from Golomb import *
 
 test_golomb = Golomb()
-numero_a_converter = 6
+numero_a_converter = 0
 m=4
 resultado = test_golomb.encode(numero_a_converter,m)
 print(resultado)
