@@ -11,7 +11,7 @@ class Golomb:
         binary = ""
 
         if number == 0:
-            return ['0','0'] 
+            return ['1','00']
         elif number >= 0:
             if m != 0:
                 if math.ceil(math.log2(m)) == math.floor(math.log2(m)):
@@ -23,15 +23,23 @@ class Golomb:
                             i+=1
                             if i == q+1:
                                 break
-                        unicode+="1"
+                    unicode+="1"
                     while (r > 0):
                         binario = math.floor(r % 2)
                         binario_string = str(binario)
                         binary = binario_string + binary
                         r = math.floor(r/2)
                         i+=1
+
                     qr.append(unicode)
-                    qr.append(binary)
+
+                    if binary == '':
+                        qr.append('00')
+                    elif len(binary) == 1:
+                        qr.append('1'.zfill(2))
+                    else:
+                        qr.append(binary)
+
                     return qr
                 else:
                     print("m tem de ser potência de 2")
