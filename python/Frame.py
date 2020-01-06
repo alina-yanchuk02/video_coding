@@ -2,6 +2,7 @@ import numpy
 from Golomb import *
 from BitStream import *
 
+
 class Frame:
     def __init__(self, height, width):
         self.height = (height + 15) // 16 * 16
@@ -20,11 +21,11 @@ class Frame:
                 for x in range(0,self.width):
                     p = 0
                     if y == 0 or x == 0:
-                        l = matriz[y][x]
+                        l = int(matriz[y][x])
                     else:
-                        a = matriz[y][x-1]
-                        b = matriz[y-1][x]
-                        c = matriz[y-1][x-1]
+                        a = int(matriz[y][x-1])
+                        b = int(matriz[y-1][x])
+                        c = int(matriz[y-1][x-1])
 
                         if c >= max(a,b):
                             p = min(a,b)
@@ -33,14 +34,9 @@ class Frame:
                         else:
                             p = a + b - c
 
-                        if matriz[y][x] < p:
-                            p = int(min(a,b,c,a+(b-c)/2,b+(a-c)/2,(a+b)/2))
 
-                        if matriz[y][x] < p:
-                            p = matriz[y][x]
-                            print(p)
-
-                        l = matriz[y][x] - p
+                        l = abs(int(matriz[y][x]) - int(p))
+                        print(l)
 
                     golomb = Golomb()
                     g = golomb.encode(l,4)
@@ -71,9 +67,9 @@ class Frame:
                         new_matriz[y][x] = matriz[y][x]
 
                     else:
-                        a = new_matriz[y][x-1]
-                        b = new_matriz[y-1][x]
-                        c = new_matriz[y-1][x-1]
+                        a = int(new_matriz[y][x-1])
+                        b = int(new_matriz[y-1][x])
+                        c = int(new_matriz[y-1][x-1])
 
                         if c >= max(a,b):
                             p = min(a,b)
@@ -83,7 +79,7 @@ class Frame:
                             p = a + b - c
 
 
-                        new_matriz[y][x] = matriz[y][x] + p
+                        new_matriz[y][x] = int(matriz[y][x]) + int(p)
 
             if yuv == 1:
                 self.Y = new_matriz
@@ -160,7 +156,7 @@ class Frame_4_2_0(Frame):
 
     def load_frame(self, read):
         self.Y = numpy.fromfile(read, dtype=numpy.uint8, count=self.width * self.height).reshape((self.height, self.width))
-
+        
         self.U = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
 
         self.V = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
