@@ -28,13 +28,6 @@ class Frame:
                         b = int(matriz[y-1][x])
                         c = int(matriz[y-1][x-1])
 
-                        '''if c >= max(a,b):
-                            p = min(a,b)
-                        elif c <= min(a,b):
-                            p = max(a,b)
-                        else:
-                            p = a + b - c'''
-
                         p = min(a,b,c,a+b-c,a+(b-c)/2,b+(a-c)/2,(a+b)/2)
                         l = int(matriz[y][x]) - int(p)
 
@@ -56,9 +49,6 @@ class Frame:
 
                 y+=1
 
-
-        print(counter)
-        print(len(bitstream.bitstream))
         return bitstream
 
     def descodificar(self,Y,U,V):
@@ -79,12 +69,6 @@ class Frame:
                         b = int(new_matriz[y-1,x])
                         c = int(new_matriz[y-1,x-1])
 
-                        '''if c >= max(a,b):
-                            p = min(a,b)
-                        elif c <= min(a,b):
-                            p = min(a,b)
-                        else:
-                            p = a + b - c'''
                         p = min(a,b,c,a+b-c,a+(b-c)/2,b+(a-c)/2,(a+b)/2)
                         #print(matriz[y][x])
                         new_matriz[y,x] = int(matriz[y][x]) + int(p)

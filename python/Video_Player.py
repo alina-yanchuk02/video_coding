@@ -2,7 +2,7 @@ from Frame import *
 import numpy as np
 import cv2 as cv2
 from datetime import datetime
-
+import os
 
 class Video_Player:
 
@@ -51,7 +51,6 @@ class Video_Player:
             while read.readline() != b'':
                 i+=1
                 frame_image=frame.load_frame(read)
-                print(frame.V[310])
                 cv2.imshow('image', frame_image)
                 cv2.waitKey(1000)
                 if i == 2:
@@ -94,13 +93,9 @@ class Video_Player:
             bitstream.setFileOutput("jpeg.bin")
             while read.readline() != b'':
                 i+=1
-                inicio = datetime.now()
                 frame_image=frame.load_frame(read)
                 bst_frame = frame.codificador()
-                fim = datetime.now()
                 bitstream.write_n_bits(bst_frame.bitstream)
-                l= fim -inicio
-                print(l)
                 if i == 2:
                     break
 
@@ -116,8 +111,7 @@ class Video_Player:
         count = 0
         sinal = 0
         q=0
-        print("ppppppp")
-        print(len(bitstream.bitstream))
+
         for bit in bitstream.bitstream:
             if len(unicode) == 0 and q == 0:
                 sinal = bit
@@ -176,7 +170,7 @@ class Video_Player:
 
             frame = Frame(height,width)
             frame.descodificar(Y,U,V)
-            print(frame.V[310])
+
             frames.append(frame)
 
 
@@ -198,8 +192,9 @@ class Video_Player:
 
 
 if __name__ == "__main__":
-    video = Video_Player("ducks_take_off_444_720p50.y4m")
+    video = Video_Player("ducks_take_off_420_720p50.y4m")
     video.play_video()
     video.codificador()
     frames = video.descodificador("jpeg.bin", video.height, video.width)
     video.play_video_descodificado(frames)
+    os.remove("jpeg.bin")
