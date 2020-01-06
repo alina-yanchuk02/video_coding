@@ -157,7 +157,6 @@ int main(){
 
 
 
-// nao funciona bem 
 
 
 

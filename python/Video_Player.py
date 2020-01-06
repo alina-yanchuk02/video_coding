@@ -51,7 +51,7 @@ class Video_Player:
             while read.readline() != b'':
                 i+=1
                 frame_image=frame.load_frame(read)
-
+                print(frame.V[310])
                 cv2.imshow('image', frame_image)
                 cv2.waitKey(1000)
                 if i == 2:
@@ -114,9 +114,15 @@ class Video_Player:
         unicode = ""
         binary = ""
         count = 0
-
+        sinal = 0
+        q=0
+        print("ppppppp")
+        print(len(bitstream.bitstream))
         for bit in bitstream.bitstream:
-            if len(unicode) == 0:
+            if len(unicode) == 0 and q == 0:
+                sinal = bit
+                q+=1
+            elif len(unicode) == 0 and q == 1:
                 unicode += str(bit)
             elif unicode[-1] != '1':
                 unicode += str(bit)
@@ -124,11 +130,15 @@ class Video_Player:
                 binary += str(bit)
             if len(unicode) >= 1 and len(binary) == 2:
                 g = golomb.decode(unicode,binary,4)
-                decode.append(g)
+                if sinal == 0:
+                    decode.append(g)
+                if sinal == 1:
+                    g = g * (-1)
+                    decode.append(g)
                 unicode = ""
                 binary = ""
+                q=0
                 count+=1
-
 
 
         i=0
@@ -163,8 +173,10 @@ class Video_Player:
             U = yuv_done[1]
             V = yuv_done[2]
 
+
             frame = Frame(height,width)
             frame.descodificar(Y,U,V)
+            print(frame.V[310])
             frames.append(frame)
 
 
@@ -173,7 +185,7 @@ class Video_Player:
     def play_video_descodificado(self,lista_frames):
         i = 0
         for frame in lista_frames:
-            i+=0
+            i+=1
             frame_image=frame.load_frame_descodificado()
 
             cv2.imshow('image', frame_image)
@@ -186,7 +198,7 @@ class Video_Player:
 
 
 if __name__ == "__main__":
-    video = Video_Player("ducks_take_off_420_720p50.y4m")
+    video = Video_Player("ducks_take_off_444_720p50.y4m")
     video.play_video()
     video.codificador()
     frames = video.descodificador("jpeg.bin", video.height, video.width)

@@ -3,14 +3,41 @@
 #include <exception>
 #include <fstream>
 #include<bits/stdc++.h>
+#include "Golomb.h"
 
 using namespace std;
 
-class Golomb{
+        Golomb::Golomb(){
+            number=0;
+            m=4;
+            unicode="";
+            binary="";
+        
+        };
 
-    public:
+        Golomb::Golomb(int number,int m){
+            number=number;
+            m=m;
+            unicode="";
+            binary="";
+        
+        };
 
-        std::string *encode(int number, int m){
+        Golomb::Golomb(std::string unicode, std::string binary, int m){
+            number=0;
+            m=m;
+            unicode=unicode;
+            binary=binary;
+        
+        };
+
+        Golomb::~Golomb() {
+
+        };
+
+
+
+       std::string* Golomb::encode(){
 
             std::string* qr=new std::string[2];
             int i=1;
@@ -20,6 +47,7 @@ class Golomb{
             std::string binary="";
             std::string binario_string;
             int binario;
+
 
             if (number>=0){
 
@@ -78,10 +106,10 @@ class Golomb{
 
 
 
-        int *decode(std::string unicode, std::string binary, int m){
+        int Golomb::decode(){
 
             int numero;
-            int *resultado;
+            int resultado;
             int q;
             int r=0;
             int base=1;
@@ -109,33 +137,36 @@ class Golomb{
 
 
             numero=r+(q*m);
-            *resultado= numero;
+            resultado= numero;
             return resultado;
 
 
         }
 
 
-};
 
 
 
 
+
+
+
+// TEST GOLOMB:
 
 
 
 int main(){
 
-    Golomb* test_golomb = new Golomb();
+    Golomb test_golomb(11,4);
     std::string *result;
-    int numero_a_converter=11;
-    int m=4;
-    result=test_golomb->encode(numero_a_converter,m);
+    test_golomb.encode();
     cout << "Resultado da conversão do inteiro para Golomb: "+result[0]+result[1]+"\n";
 
-    int *numero_desconvertido;
-    numero_desconvertido=test_golomb->decode(result[0],result[1],m);
-    cout << "Resultado de conversão de Golomb para inteiro: " << *numero_desconvertido << "\n";
+
+    Golomb test_golomb2(result[0],result[1],4);
+    int numero_desconvertido;
+    numero_desconvertido=test_golomb.decode();
+    cout << "Resultado de conversão de Golomb para inteiro: " << numero_desconvertido << "\n";
 
 
 

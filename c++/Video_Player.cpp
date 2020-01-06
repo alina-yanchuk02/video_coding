@@ -18,7 +18,7 @@ class VideoPlayer{
     public:
 
         int height_num,width_num;
-        std::string fps;
+        std::string fps,v;
 
         void read_video_file(string file){
 
@@ -58,6 +58,18 @@ class VideoPlayer{
             fps=tokens[3];
             fps.erase(std::remove(fps.begin(), fps.end(), 'F'), fps.end());
 
+            v=tokens[6];
+
+            if (v=="C422"){
+                cout << v;
+
+            }
+
+            if (v=="C444"){
+                cout << v;
+
+            }
+
 
             getline(myfile, line);
 
@@ -86,7 +98,7 @@ int main(){
 
     VideoPlayer* test_player = new VideoPlayer();
 
-    test_player->read_video_file("video.y4m");
+    test_player->read_video_file("ducks_take_off_420_720p50.y4m");
 
 
 

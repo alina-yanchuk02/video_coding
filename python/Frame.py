@@ -21,6 +21,7 @@ class Frame:
                 for x in range(0,self.width):
                     p = 0
                     if y == 0 or x == 0:
+                        bitstream.addBit(int(0))
                         l = int(matriz[y][x])
                     else:
                         a = int(matriz[y][x-1])
@@ -35,13 +36,19 @@ class Frame:
                             p = a + b - c
 
 
-                        l = abs(int(matriz[y][x]) - int(p))
-                        print(l)
+                        l = int(matriz[y][x]) - int(p)
 
-                    golomb = Golomb()
-                    g = golomb.encode(l,4)
+                        if l < 0:
+                            bitstream.addBit(int(1))
+                        if l >= 0:
+                            bitstream.addBit(int(0))
+
 
                     counter+=1
+                    golomb = Golomb()
+                    g = golomb.encode(abs(l),4)
+
+
                     for bit in "".join(g):
                         bitstream.addBit(int(bit))
 
@@ -51,25 +58,26 @@ class Frame:
 
 
         print(counter)
-        print(real)
         print(len(bitstream.bitstream))
         return bitstream
 
     def descodificar(self,Y,U,V):
         yuv = 0
+
         for matriz in [Y,U,V]:
             yuv +=1
-            new_matriz = [[0]* self.width ] * self.height
+            new_matriz = numpy.array([[0]* self.width ] * self.height)
+
             for y in range(0,self.height):
                 for x in range(0,self.width):
                     p = 0
                     if y == 0 or x == 0:
-                        new_matriz[y][x] = matriz[y][x]
+                        new_matriz[y,x] = matriz[y][x]
 
                     else:
-                        a = int(new_matriz[y][x-1])
-                        b = int(new_matriz[y-1][x])
-                        c = int(new_matriz[y-1][x-1])
+                        a = new_matriz[y,x-1]
+                        b = new_matriz[y-1,x]
+                        c = new_matriz[y-1,x-1]
 
                         if c >= max(a,b):
                             p = min(a,b)
@@ -78,8 +86,8 @@ class Frame:
                         else:
                             p = a + b - c
 
-
-                        new_matriz[y][x] = int(matriz[y][x]) + int(p)
+                        print(matriz[y][x])
+                        new_matriz[y,x] = matriz[y][x] + p
 
             if yuv == 1:
                 self.Y = new_matriz
@@ -156,7 +164,7 @@ class Frame_4_2_0(Frame):
 
     def load_frame(self, read):
         self.Y = numpy.fromfile(read, dtype=numpy.uint8, count=self.width * self.height).reshape((self.height, self.width))
-        
+
         self.U = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
 
         self.V = numpy.fromfile(read, dtype=numpy.uint8, count=(self.width//2)*(self.height//2)).reshape((self.height//2, self.width//2)).repeat(2, axis=0).repeat(2, axis=1)
