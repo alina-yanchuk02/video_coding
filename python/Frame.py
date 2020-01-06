@@ -28,14 +28,14 @@ class Frame:
                         b = int(matriz[y-1][x])
                         c = int(matriz[y-1][x-1])
 
-                        if c >= max(a,b):
+                        '''if c >= max(a,b):
                             p = min(a,b)
                         elif c <= min(a,b):
                             p = max(a,b)
                         else:
-                            p = a + b - c
+                            p = a + b - c'''
 
-
+                        p = min(a,b,c,a+b-c,a+(b-c)/2,b+(a-c)/2,(a+b)/2)
                         l = int(matriz[y][x]) - int(p)
 
                         if l < 0:
@@ -72,22 +72,22 @@ class Frame:
                 for x in range(0,self.width):
                     p = 0
                     if y == 0 or x == 0:
-                        new_matriz[y,x] = matriz[y][x]
+                        new_matriz[y,x] = int(matriz[y][x])
 
                     else:
-                        a = new_matriz[y,x-1]
-                        b = new_matriz[y-1,x]
-                        c = new_matriz[y-1,x-1]
+                        a = int(new_matriz[y,x-1])
+                        b = int(new_matriz[y-1,x])
+                        c = int(new_matriz[y-1,x-1])
 
-                        if c >= max(a,b):
+                        '''if c >= max(a,b):
                             p = min(a,b)
                         elif c <= min(a,b):
                             p = min(a,b)
                         else:
-                            p = a + b - c
-
-                        print(matriz[y][x])
-                        new_matriz[y,x] = matriz[y][x] + p
+                            p = a + b - c'''
+                        p = min(a,b,c,a+b-c,a+(b-c)/2,b+(a-c)/2,(a+b)/2)
+                        #print(matriz[y][x])
+                        new_matriz[y,x] = int(matriz[y][x]) + int(p)
 
             if yuv == 1:
                 self.Y = new_matriz
