@@ -1,5 +1,0 @@
-cmake_minimum_required(VERSION 2.8)
-project( Video_Player )
-find_package( OpenCV REQUIRED )
-add_executable( Video_Player Video_Player.cpp )
-target_link_libraries( Video_Player ${OpenCV_LIBS} )

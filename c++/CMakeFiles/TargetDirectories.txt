@@ -1,3 +1,0 @@
-/home/alina/Desktop/UA-3ANO/cslp/video_coding/c++/CMakeFiles/rebuild_cache.dir
-/home/alina/Desktop/UA-3ANO/cslp/video_coding/c++/CMakeFiles/Video_Player.dir
-/home/alina/Desktop/UA-3ANO/cslp/video_coding/c++/CMakeFiles/edit_cache.dir
