@@ -24,12 +24,11 @@ class BitStream:
         f=open(self.fileInput, "rb")
         for byte in f.read():
             self.byteArray += [byte]
-            for i in range(8):
-                self.bitstream.append((byte >> i) & 1)
+            for i in bin(byte)[2:].zfill(8):
+                self.bitstream.append(int(i))
 
     def write_file(self):
         b = self.toBytes(self.bitstream)
-        print(b == self.byteArray)
         f = open(self.fileOutput,"wb")
         f.write(bytes(b))
 

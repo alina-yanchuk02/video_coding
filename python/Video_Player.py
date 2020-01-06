@@ -27,7 +27,7 @@ class Video_Player:
             header = header.split(" ")
 
             self.width = int(header[1].replace("W", ""))
-            print(self.width)
+
 
             self.height = int(header[2].replace("H", ""))
 
@@ -53,8 +53,8 @@ class Video_Player:
                 frame_image=frame.load_frame(read)
 
                 cv2.imshow('image', frame_image)
-                cv2.waitKey(1)
-                if i == 10:
+                cv2.waitKey(1000)
+                if i == 2:
                     break
 
             cv2.destroyAllWindows()
@@ -70,7 +70,6 @@ class Video_Player:
             header = header.split(" ")
 
             self.width = int(header[1].replace("W", ""))
-            print(self.width)
 
             self.height = int(header[2].replace("H", ""))
 
@@ -95,7 +94,6 @@ class Video_Player:
             bitstream.setFileOutput("jpeg.bin")
             while read.readline() != b'':
                 i+=1
-                print(i)
                 inicio = datetime.now()
                 frame_image=frame.load_frame(read)
                 bst_frame = frame.codificador()
@@ -103,19 +101,93 @@ class Video_Player:
                 bitstream.write_n_bits(bst_frame.bitstream)
                 l= fim -inicio
                 print(l)
-                if i == 1:
+                if i == 2:
                     break
 
-    def descodificador(self, file):
+    def descodificador(self, file, height, width):
+        golomb = Golomb()
         bitstream = BitStream()
         bitstream.setFileInput(file)
         bitstream.read_file()
-        print(len(bitstream.bitstream))
+        decode = []
+
+        unicode = ""
+        binary = ""
+        count = 0
+
+        for bit in bitstream.bitstream:
+            if len(unicode) == 0:
+                unicode += str(bit)
+            elif unicode[-1] != '1':
+                unicode += str(bit)
+            else:
+                binary += str(bit)
+            if len(unicode) >= 1 and len(binary) == 2:
+                g = golomb.decode(unicode,binary,4)
+                decode.append(g)
+                unicode = ""
+                binary = ""
+                count+=1
+
+
+
+        i=0
+        list_frames=[]
+        size = height * width * 3
+        while i<len(decode):
+            list_frames.append(decode[i:i+size])
+            i+=size
+
+        frames = []
+
+        for d in list_frames:
+
+            i=0
+            yuv = []
+            size = height * width
+            while i<len(d):
+                yuv.append(d[i:i+size])
+                i+=size
+
+            yuv_done = []
+            for ele in yuv:
+                i = 0
+                ele_done = []
+                size = width
+                while i<len(ele):
+                    ele_done.append(ele[i:i+size])
+                    i+=size
+                yuv_done.append(ele_done)
+
+            Y = yuv_done[0]
+            U = yuv_done[1]
+            V = yuv_done[2]
+
+            frame = Frame(height,width)
+            frame.descodificar(Y,U,V)
+            frames.append(frame)
+
+
+        return frames
+
+    def play_video_descodificado(self,lista_frames):
+        i = 0
+        for frame in lista_frames:
+            i+=0
+            frame_image=frame.load_frame_descodificado()
+
+            cv2.imshow('image', frame_image)
+            cv2.waitKey(1000)
+            if i == 2:
+                break
+
+        cv2.destroyAllWindows()
+
+
 
 if __name__ == "__main__":
     video = Video_Player("ducks_take_off_420_720p50.y4m")
-    #video.play_video()
+    video.play_video()
     video.codificador()
-    print(video.height)
-    print(video.width)
-    video.descodificador("jpeg.bin")
+    frames = video.descodificador("jpeg.bin", video.height, video.width)
+    video.play_video_descodificado(frames)

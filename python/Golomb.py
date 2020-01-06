@@ -11,7 +11,7 @@ class Golomb:
         binary = ""
 
         if number == 0:
-            return ['1','00']
+            return ["1","00"]
         elif number >= 0:
             if m != 0:
                 if math.ceil(math.log2(m)) == math.floor(math.log2(m)):
@@ -33,8 +33,8 @@ class Golomb:
 
                     qr.append(unicode)
 
-                    if binary == '':
-                        qr.append('00')
+                    if binary == "":
+                        qr.append("00")
                     elif len(binary) == 1:
                         qr.append('1'.zfill(2))
                     else:
